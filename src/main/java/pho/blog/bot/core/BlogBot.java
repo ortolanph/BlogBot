@@ -18,18 +18,12 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.apache.commons.io.FileUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.GetFile;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Audio;
-import org.telegram.telegrambots.meta.api.objects.Contact;
-import org.telegram.telegrambots.meta.api.objects.Document;
-import org.telegram.telegrambots.meta.api.objects.Location;
-import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.PhotoSize;
-import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.Video;
+import org.telegram.telegrambots.meta.api.objects.*;
 import org.telegram.telegrambots.meta.api.objects.stickers.Sticker;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
@@ -37,12 +31,19 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 public class BlogBot extends TelegramLongPollingBot {
 
     private static final Logger LOGGER = Logger.getLogger(BlogBot.class.getName());
-    private static final String BOT_FILES = "/home/$USER/BlogBot/";
-    private static final String BOT_KEY = "";
+
+    @Value("${blogbot.files}")
+    private String botFiles;
+
+    @Value("§{blogbot.name}")
+    private String botName;
+
+    @Value("${BOT_KEY}")
+    private String botKey = "";
 
     @Override
     public String getBotUsername() {
-        return "Blog Bot";
+        return botName;
     }
 
     @Override
@@ -52,6 +53,8 @@ public class BlogBot extends TelegramLongPollingBot {
         if (update.hasMessage()) {
             Message message = update.getMessage();
 
+            var user = message.getFrom();
+
             LOGGER.warning("Message Received");
 
             if (message.hasPhoto()) {
@@ -60,7 +63,7 @@ public class BlogBot extends TelegramLongPollingBot {
                 LOGGER.warning("\tPhoto");
 
                 for (PhotoSize photo : photos) {
-                    Path physicalPhoto = Path.of(BOT_FILES,
+                    Path physicalPhoto = Path.of(botFiles,
                             String.format("%s_%s.jpg", message.getFrom().getId(), photo.getFileId()));
 
                     saveFile(photo.getFileId(), physicalPhoto.toFile());
@@ -73,7 +76,7 @@ public class BlogBot extends TelegramLongPollingBot {
 
                 LOGGER.warning("\tVideo");
 
-                Path physicalVideo = Path.of(BOT_FILES,
+                Path physicalVideo = Path.of(botFiles,
                         String.format("%s_%s.mp4", message.getFrom().getId(), video.getFileId()));
 
                 saveFile(video.getFileId(), physicalVideo.toFile());
@@ -85,7 +88,7 @@ public class BlogBot extends TelegramLongPollingBot {
 
                 LOGGER.warning("\tAudio");
 
-                Path physicalAudio = Path.of(BOT_FILES,
+                Path physicalAudio = Path.of(botFiles,
                         String.format("%s_%s.ogg", message.getFrom().getId(), audio.getFileId()));
 
                 saveFile(audio.getFileId(), physicalAudio.toFile());
@@ -95,7 +98,7 @@ public class BlogBot extends TelegramLongPollingBot {
             if (message.hasContact()) {
                 Contact contact = message.getContact();
 
-                Path vcardPath = Path.of(BOT_FILES, String.format("%s_%s_%s_contact.vcard", message.getFrom().getId(),
+                Path vcardPath = Path.of(botFiles, String.format("%s_%s_%s_contact.vcard", message.getFrom().getId(),
                         contact.getFirstName(), contact.getLastName()));
 
                 try {
@@ -121,8 +124,8 @@ public class BlogBot extends TelegramLongPollingBot {
                 ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
                 try {
                     writer.writeValue(new File(
-                        String.format("%s%s_%s.json", 
-                            BOT_FILES,
+                        String.format("%s%s_%s.json",
+                                botFiles,
                             message.getFrom().getId(),
                             LocalDateTime
                                 .now()
@@ -141,7 +144,7 @@ public class BlogBot extends TelegramLongPollingBot {
 
                 LOGGER.warning("\tSticker");
 
-                Path physicalSticker = Path.of(BOT_FILES, 
+                Path physicalSticker = Path.of(botFiles,
                     String.format("%s_%s.webp", message.getFrom().getId(), sticker.getFileId()));
 
                 saveFile(sticker.getFileId(), physicalSticker.toFile());
@@ -153,7 +156,7 @@ public class BlogBot extends TelegramLongPollingBot {
 
                 LOGGER.warning("\tDocument");
 
-                Path physicalDocument = Path.of(BOT_FILES,
+                Path physicalDocument = Path.of(botFiles,
                     String.format("%s_%s", message.getFrom().getId(), document.getFileName()));
 
                 saveFile(document.getFileId(), physicalDocument.toFile());
@@ -190,7 +193,7 @@ public class BlogBot extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-        return BOT_KEY;
+        return botKey;
     }
     
 }
