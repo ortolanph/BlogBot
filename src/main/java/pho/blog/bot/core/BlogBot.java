@@ -38,6 +38,7 @@ public class BlogBot extends TelegramLongPollingBot {
 
     private static final Logger LOGGER = Logger.getLogger(BlogBot.class.getName());
     private static final String BOT_FILES = "/home/$USER/BlogBot/";
+    private static final String BOT_KEY = "";
 
     @Override
     public String getBotUsername() {
