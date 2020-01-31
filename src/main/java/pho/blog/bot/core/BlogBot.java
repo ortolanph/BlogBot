@@ -54,7 +54,7 @@ public class BlogBot extends TelegramLongPollingBot {
 
             LOGGER.warning("Message Received");
 
-            if (message.hasPhoto()) {
+            if (message.hasPhoto()) { // OK
                 List<PhotoSize> photos = message.getPhoto();
 
                 LOGGER.warning("\tPhoto");
@@ -68,7 +68,7 @@ public class BlogBot extends TelegramLongPollingBot {
                 type = "Photo";
             }
 
-            if (message.hasVideo()) {
+            if (message.hasVideo()) { // OK
                 Video video = message.getVideo();
 
                 LOGGER.warning("\tVideo");
@@ -80,7 +80,7 @@ public class BlogBot extends TelegramLongPollingBot {
                 type = "Video";
             }
 
-            if (message.getAudio() != null) {
+            if (message.getAudio() != null) { // OK
                 Audio audio = message.getAudio();
 
                 LOGGER.warning("\tAudio");
