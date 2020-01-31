@@ -16,8 +16,6 @@ public abstract class MessageHandler {
 
     public abstract HandlerResult process(Message message);
 
-    // PhotoMessageHandler
-    // VideoMessageHandler
     // ContactMessageHandler
     // LocationMesageHandler
     // StickerMessageHandler

@@ -1,4 +1,4 @@
-package pho.blog.bot.core.utils;
+package pho.blog.bot.core.saver;
 
 import org.apache.commons.io.FileUtils;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -29,10 +29,10 @@ public class BotFileUtils {
         }
     }
 
-    public static void saveFile(InputStream inputStream, File physicalItem) throws IOException {
+    public static void saveFile(InputStream inputStream, File physicalItem, Saver saver) throws Exception {
         try {
-            FileUtils.copyInputStreamToFile(inputStream, physicalItem);
-        } catch (IOException e) {
+            saver.save(inputStream, physicalItem);
+        } catch (Exception e) {
             throw e;
         }
     }
