@@ -1,4 +1,4 @@
-package pho.blog.bot.core.handlers;
+package pho.blog.bot.core.handler;
 
 public enum MessageType {
 
