@@ -13,7 +13,6 @@ import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.logging.Logger;
 
-@Component
 public class ContactMessageHandler extends TelegramMessageHandler {
     private static final Logger LOGGER = Logger.getLogger(ContactMessageHandler.class.getName());
 

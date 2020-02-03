@@ -12,13 +12,9 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.logging.Logger;
 
-@Component
 public class PhotoMessageHandler extends TelegramMessageHandler {
 
     private static final Logger LOGGER = Logger.getLogger(PhotoMessageHandler.class.getName());
-
-    @Value("${blogbot.files}")
-    private String botFiles;
 
     @Override
     public HandlerResult process(Message message, String botFiles) {

@@ -11,7 +11,6 @@ import pho.blog.bot.core.handler.TelegramMessageHandler;
 import java.nio.file.Path;
 import java.util.logging.Logger;
 
-@Component
 public class StickerMessageHandler extends TelegramMessageHandler {
 
     private static final Logger LOGGER = Logger.getLogger(StickerMessageHandler.class.getName());
