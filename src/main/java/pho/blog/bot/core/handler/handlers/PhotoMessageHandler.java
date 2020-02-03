@@ -1,7 +1,5 @@
 package pho.blog.bot.core.handler.handlers;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 import pho.blog.bot.core.handler.HandlerResult;

@@ -43,12 +43,12 @@ public class LocationMessageHandler extends TelegramMessageHandler {
             String locationJSON = writer.writeValueAsString(locationNode);
             locationInputStream = IOUtils.toInputStream(locationJSON, Charset.defaultCharset());
             physicalLocation = new File(
-                            String.format("%s%s_%s.json",
-                                    botFiles,
-                                    message.getFrom().getId(),
-                                    LocalDateTime
-                                            .now()
-                                            .format(DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss"))));
+                    String.format("%s%s_%s.json",
+                            botFiles,
+                            message.getFrom().getId(),
+                            LocalDateTime
+                                    .now()
+                                    .format(DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss"))));
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -1,7 +1,6 @@
 package pho.blog.bot.core.handler.handlers;
 
 import org.apache.commons.io.IOUtils;
-import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Contact;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import pho.blog.bot.core.handler.HandlerResult;

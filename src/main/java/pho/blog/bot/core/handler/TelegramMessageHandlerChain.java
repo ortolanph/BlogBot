@@ -4,7 +4,8 @@ import pho.blog.bot.core.handler.handlers.*;
 
 public final class TelegramMessageHandlerChain {
 
-    private TelegramMessageHandlerChain() {}
+    private TelegramMessageHandlerChain() {
+    }
 
     public static TelegramMessageHandler chain() {
         TelegramMessageHandler root = new PhotoMessageHandler();
