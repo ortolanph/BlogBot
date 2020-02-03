@@ -16,8 +16,11 @@ public final class TelegramMessageHandlerChain {
         AudioMessageHandler audioMessageHandler = new AudioMessageHandler();
         videoMessageHandler.setNext(audioMessageHandler);
 
+        VoiceMessageHandler voiceMessageHandler = new VoiceMessageHandler();
+        audioMessageHandler.setNext(voiceMessageHandler);
+
         ContactMessageHandler contactMessageHandler = new ContactMessageHandler();
-        audioMessageHandler.setNext(contactMessageHandler);
+        voiceMessageHandler.setNext(contactMessageHandler);
 
         LocationMessageHandler locationMessageHandler = new LocationMessageHandler();
         contactMessageHandler.setNext(locationMessageHandler);

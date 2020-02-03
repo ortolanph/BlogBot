@@ -30,6 +30,8 @@ public class LocationMessageHandler extends TelegramMessageHandler {
     private HandlerResult handle(Message message, String botFiles) {
         Location location = message.getLocation();
 
+        LOGGER.warning("\tLocation");
+
         ObjectMapper mapper = new ObjectMapper();
 
         ObjectNode locationNode = mapper.createObjectNode();

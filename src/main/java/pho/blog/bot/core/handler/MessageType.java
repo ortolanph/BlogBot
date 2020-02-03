@@ -5,10 +5,12 @@ public enum MessageType {
     PHOTO("Photo"),
     VIDEO("Video"),
     AUDIO("Audio"),
+    VOICE("Voice"),
     CONTACT("Contact"),
     LOCATION("Location"),
     STICKER("Sticker"),
-    DOCUMENT("Document");
+    DOCUMENT("Document"),
+    TEXT("Text");
 
     private String description;
 

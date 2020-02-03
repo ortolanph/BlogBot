@@ -28,6 +28,7 @@ public class BlogBot extends TelegramLongPollingBot {
             MessageType.PHOTO,
             MessageType.VIDEO,
             MessageType.AUDIO,
+            MessageType.VOICE,
             MessageType.STICKER,
             MessageType.DOCUMENT
     );
@@ -48,7 +49,7 @@ public class BlogBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        String type = "";
+        String type = null;
 
         if (update.hasMessage()) {
             Message message = update.getMessage();
@@ -75,9 +76,14 @@ public class BlogBot extends TelegramLongPollingBot {
                 type = result.getMessageType().getDescription();
             }
 
+            if(message.hasText()) {
+                System.out.println(message.getText());
+                type = MessageType.TEXT.getDescription();
+            }
+
             SendMessage response = new SendMessage();
             response.setChatId(message.getChatId());
-            response.setText(type + " Received!");
+            response.setText(String.format("%s message received!", type));
             try {
                 execute(response);
             } catch (TelegramApiException exception) {

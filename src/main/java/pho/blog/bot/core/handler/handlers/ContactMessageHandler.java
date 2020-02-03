@@ -28,6 +28,8 @@ public class ContactMessageHandler extends TelegramMessageHandler {
 
         String vcard = contact.getVCard();
 
+        LOGGER.warning("\tContact");
+
         InputStream vcardInputStream = IOUtils.toInputStream(vcard, Charset.defaultCharset());
 
         return new HandlerResult(MessageType.CONTACT, vcardInputStream, vcardPath.toFile());
