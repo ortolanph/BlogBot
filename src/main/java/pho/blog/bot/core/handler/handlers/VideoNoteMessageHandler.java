@@ -22,7 +22,7 @@ public class VideoNoteMessageHandler extends TelegramMessageHandler {
     private HandlerResult handle(Message message, String botFiles) {
         VideoNote video = message.getVideoNote();
 
-        LOGGER.warning("\tVideo");
+        LOGGER.warning("\tVideo Note");
 
         Path physicalVideoNote = Path.of(botFiles,
                 String.format("%s_%s.mp4", message.getFrom().getId(), video.getFileId()));
