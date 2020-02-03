@@ -3,7 +3,7 @@ package pho.blog.bot.core.handler.handlers;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.Video;
+import org.telegram.telegrambots.meta.api.objects.stickers.Sticker;
 import pho.blog.bot.core.handler.HandlerResult;
 import pho.blog.bot.core.handler.MessageType;
 import pho.blog.bot.core.handler.TelegramMessageHandler;
@@ -12,9 +12,9 @@ import java.nio.file.Path;
 import java.util.logging.Logger;
 
 @Component
-public class VideoMessageHandler extends TelegramMessageHandler {
+public class StickerMessageHandler extends TelegramMessageHandler {
 
-    private static final Logger LOGGER = Logger.getLogger(VideoMessageHandler.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(StickerMessageHandler.class.getName());
 
     @Override
     public HandlerResult process(Message message, String botFiles) {
@@ -22,14 +22,14 @@ public class VideoMessageHandler extends TelegramMessageHandler {
     }
 
     private HandlerResult handle(Message message, String botFiles) {
-        Video video = message.getVideo();
+        Sticker sticker = message.getSticker();
 
-        LOGGER.warning("\tVideo");
+        LOGGER.warning("\tSticker");
 
-        Path physicalVideo = Path.of(botFiles,
-                String.format("%s_%s.mp4", message.getFrom().getId(), video.getFileId()));
+        Path physicalSticker = Path.of(botFiles,
+                String.format("%s_%s.webp", message.getFrom().getId(), sticker.getFileId()));
 
-        HandlerResult result = new HandlerResult(MessageType.VIDEO, video.getFileId(), physicalVideo.toFile());
+        HandlerResult result = new HandlerResult(MessageType.STICKER, sticker.getFileId(), physicalSticker.toFile());
 
         return result;
     }

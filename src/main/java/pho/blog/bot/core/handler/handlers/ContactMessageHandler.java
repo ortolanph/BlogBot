@@ -1,43 +1,37 @@
 package pho.blog.bot.core.handler.handlers;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.apache.commons.io.IOUtils;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Contact;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import pho.blog.bot.core.handler.HandlerResult;
-import pho.blog.bot.core.handler.MessageHandler;
 import pho.blog.bot.core.handler.MessageType;
+import pho.blog.bot.core.handler.TelegramMessageHandler;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
+import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.logging.Logger;
 
-public class ContactMessageHandler extends MessageHandler {
+@Component
+public class ContactMessageHandler extends TelegramMessageHandler {
     private static final Logger LOGGER = Logger.getLogger(ContactMessageHandler.class.getName());
 
-    @Value("${blogbot.files}")
-    private String botFiles;
-
     @Override
-    public HandlerResult process(Message message) {
-        return message.hasPhoto() ? handle(message) : getNext().process(message);
+    public HandlerResult process(Message message, String botFiles) {
+        return message.hasPhoto() ? handle(message, botFiles) : getNext().process(message, botFiles);
     }
 
-    private HandlerResult handle(Message message) {
+    private HandlerResult handle(Message message, String botFiles) {
         Contact contact = message.getContact();
 
         Path vcardPath = Path.of(botFiles, String.format("%s_%s_%s_contact.vcard", message.getFrom().getId(),
                 contact.getFirstName(), contact.getLastName()));
 
-        File vcard = null;
+        String vcard = contact.getVCard();
 
-        try {
-            vcard = Files.createFile(vcardPath).toFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        InputStream vcardInputStream = IOUtils.toInputStream(vcard, Charset.defaultCharset());
 
-        return new HandlerResult(MessageType.CONTACT, vcard);
+        return new HandlerResult(MessageType.CONTACT, vcardInputStream, vcardPath.toFile());
     }
 }

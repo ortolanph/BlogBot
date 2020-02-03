@@ -1,17 +1,19 @@
 package pho.blog.bot.core.handler.handlers;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 import pho.blog.bot.core.handler.HandlerResult;
-import pho.blog.bot.core.handler.MessageHandler;
 import pho.blog.bot.core.handler.MessageType;
+import pho.blog.bot.core.handler.TelegramMessageHandler;
 
 import java.nio.file.Path;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class PhotoMessageHandler extends MessageHandler {
+@Component
+public class PhotoMessageHandler extends TelegramMessageHandler {
 
     private static final Logger LOGGER = Logger.getLogger(PhotoMessageHandler.class.getName());
 
@@ -19,11 +21,11 @@ public class PhotoMessageHandler extends MessageHandler {
     private String botFiles;
 
     @Override
-    public HandlerResult process(Message message) {
-        return message.hasPhoto() ? handle(message) : getNext().process(message);
+    public HandlerResult process(Message message, String botFiles) {
+        return message.hasPhoto() ? handle(message, botFiles) : getNext().process(message, botFiles);
     }
 
-    private HandlerResult handle(Message message) {
+    private HandlerResult handle(Message message, String botFiles) {
         List<PhotoSize> photos = message.getPhoto();
 
         LOGGER.warning("\tPhoto");

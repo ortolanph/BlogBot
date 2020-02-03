@@ -1,29 +1,20 @@
 package pho.blog.bot.core;
 
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.apache.commons.io.FileUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.api.methods.GetFile;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.*;
-import org.telegram.telegrambots.meta.api.objects.stickers.Sticker;
+import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import pho.blog.bot.core.handler.HandlerResult;
+import pho.blog.bot.core.handler.TelegramMessageHandler;
+import pho.blog.bot.core.handler.TelegramMessageHandlerChain;
+import pho.blog.bot.core.saver.BotFileUtils;
+import pho.blog.bot.core.saver.savers.DefaultFileSaver;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.logging.Logger;
 
 @Component
@@ -40,6 +31,11 @@ public class BlogBot extends TelegramLongPollingBot {
     @Value("${BOT_KEY}")
     private String botKey = "";
 
+    @Autowired
+    private DefaultFileSaver saver;
+
+    private TelegramMessageHandler telegramMessageHandler = TelegramMessageHandlerChain.chain();
+
     @Override
     public String getBotUsername() {
         return botName;
@@ -49,12 +45,45 @@ public class BlogBot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         String type = "";
 
-        if (update.hasMessage()) {
-            Message message = update.getMessage();
+            if (update.hasMessage()) {
+                Message message = update.getMessage();
 
-            LOGGER.warning("Message Received");
+                LOGGER.warning("Message Received");
 
-            if (message.hasPhoto()) { // OK
+                HandlerResult result = telegramMessageHandler.process(message, botFiles);
+
+                if (result != null) {
+                    switch (result.getMessageType()) {
+                        case PHOTO:
+                        case VIDEO:
+                        case AUDIO:
+                        case STICKER:
+                        case DOCUMENT:
+                            try {
+                                InputStream inputStream = BotFileUtils.getInputStream(result.getFileId(), getBotToken(), this);
+                                BotFileUtils.saveFile(inputStream, result.getFile(), saver);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                            break;
+                        case CONTACT:
+                        case LOCATION:
+                            try {
+                                BotFileUtils.saveFile(result.getInputStream(), result.getFile(), saver);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                            break;
+                        default:
+
+                    }
+
+                    result.getMessageType().getDescription();
+                }
+
+/*            if (message.hasPhoto()) { // OK
                 List<PhotoSize> photos = message.getPhoto();
 
                 LOGGER.warning("\tPhoto");
@@ -158,20 +187,20 @@ public class BlogBot extends TelegramLongPollingBot {
 
                 saveFile(document.getFileId(), physicalDocument.toFile());
                 type = "Document";
-            }
+            }*/
 
-            SendMessage response = new SendMessage();
-            response.setChatId(message.getChatId());
-            response.setText(type + " Received!");
-            try {
-                execute(response);
-            } catch (TelegramApiException exception) {
-                exception.printStackTrace();
+                SendMessage response = new SendMessage();
+                response.setChatId(message.getChatId());
+                response.setText(type + " Received!");
+                try {
+                    execute(response);
+                } catch (TelegramApiException exception) {
+                    exception.printStackTrace();
+                }
             }
-        }
     }
 
-    private void saveFile(String fileId, File physicalItem) {
+/*    private void saveFile(String fileId, File physicalItem) {
         GetFile request = new GetFile();
         request.setFileId(fileId);
 
@@ -186,7 +215,7 @@ public class BlogBot extends TelegramLongPollingBot {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     @Override
     public String getBotToken() {
