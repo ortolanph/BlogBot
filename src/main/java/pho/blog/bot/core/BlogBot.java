@@ -27,6 +27,7 @@ public class BlogBot extends TelegramLongPollingBot {
     private static final List<MessageType> COMPLEX_TYPE_MESSAGE_TYPES = Arrays.asList(
             MessageType.PHOTO,
             MessageType.VIDEO,
+            MessageType.VIDEO_NOTE,
             MessageType.AUDIO,
             MessageType.VOICE,
             MessageType.STICKER,

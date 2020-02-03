@@ -4,6 +4,7 @@ public enum MessageType {
 
     PHOTO("Photo"),
     VIDEO("Video"),
+    VIDEO_NOTE("Video Note"),
     AUDIO("Audio"),
     VOICE("Voice"),
     CONTACT("Contact"),

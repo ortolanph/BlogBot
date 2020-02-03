@@ -1,5 +1,6 @@
 package pho.blog.bot.core.handler;
 
+import org.telegram.telegrambots.meta.api.objects.VideoNote;
 import pho.blog.bot.core.handler.handlers.*;
 
 public final class TelegramMessageHandlerChain {
@@ -13,8 +14,11 @@ public final class TelegramMessageHandlerChain {
         VideoMessageHandler videoMessageHandler = new VideoMessageHandler();
         root.setNext(videoMessageHandler);
 
+        VideoNoteMessageHandler videoNoteMessageHandler = new VideoNoteMessageHandler();
+        videoMessageHandler.setNext(videoNoteMessageHandler);
+
         AudioMessageHandler audioMessageHandler = new AudioMessageHandler();
-        videoMessageHandler.setNext(audioMessageHandler);
+        videoNoteMessageHandler.setNext(audioMessageHandler);
 
         VoiceMessageHandler voiceMessageHandler = new VoiceMessageHandler();
         audioMessageHandler.setNext(voiceMessageHandler);
