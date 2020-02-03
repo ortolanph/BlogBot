@@ -15,7 +15,7 @@ public class DocumentMessageHandler extends TelegramMessageHandler {
 
     @Override
     public HandlerResult process(Message message, String botFiles) {
-        return message.hasPhoto() ? handle(message, botFiles) : getNext().process(message, botFiles);
+        return message.hasDocument() ? handle(message, botFiles) : getNext().process(message, botFiles);
     }
 
     private HandlerResult handle(Message message, String botFiles) {
