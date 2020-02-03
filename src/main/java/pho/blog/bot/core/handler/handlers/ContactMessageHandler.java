@@ -1,5 +1,10 @@
 package pho.blog.bot.core.handler.handlers;
 
+import ezvcard.Ezvcard;
+import ezvcard.VCard;
+import ezvcard.VCardVersion;
+import ezvcard.property.StructuredName;
+import ezvcard.property.Telephone;
 import org.apache.commons.io.IOUtils;
 import org.telegram.telegrambots.meta.api.objects.Contact;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -27,6 +32,22 @@ public class ContactMessageHandler extends TelegramMessageHandler {
                 contact.getFirstName(), contact.getLastName()));
 
         String vcard = contact.getVCard();
+
+        if(vcard == null) {
+            VCard myContact = new VCard();
+
+            StructuredName name = new StructuredName();
+            name.setFamily(contact.getLastName());
+            name.setGiven(contact.getFirstName());
+            myContact.setStructuredName(name);
+
+            Telephone telephone = new Telephone(contact.getPhoneNumber());
+            myContact.addTelephoneNumber(telephone);
+
+            myContact.setFormattedName(String.format("%s %s", contact.getFirstName(), contact.getLastName()));
+
+            vcard = Ezvcard.write(myContact).version(VCardVersion.V4_0).go();
+        }
 
         LOGGER.warning("\tContact");
 

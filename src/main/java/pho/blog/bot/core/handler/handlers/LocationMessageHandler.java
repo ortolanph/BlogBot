@@ -45,8 +45,9 @@ public class LocationMessageHandler extends TelegramMessageHandler {
             String locationJSON = writer.writeValueAsString(locationNode);
             locationInputStream = IOUtils.toInputStream(locationJSON, Charset.defaultCharset());
             physicalLocation = new File(
-                    String.format("%s%s_%s.json",
+                    String.format("%s%s%s_%s.json",
                             botFiles,
+                            File.separator,
                             message.getFrom().getId(),
                             LocalDateTime
                                     .now()
