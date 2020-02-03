@@ -22,10 +22,10 @@ public class BlogBot extends TelegramLongPollingBot {
 
     private static final Logger LOGGER = Logger.getLogger(BlogBot.class.getName());
 
-    @Value("${blogbot.files}")
+    @Value("${bot.files}")
     private String botFiles;
 
-    @Value("§{blogbot.name}")
+    @Value("§{bot.name}")
     private String botName;
 
     @Value("${BOT_KEY}")
@@ -80,7 +80,7 @@ public class BlogBot extends TelegramLongPollingBot {
 
                     }
 
-                    result.getMessageType().getDescription();
+                    type = result.getMessageType().getDescription();
                 }
 
 /*            if (message.hasPhoto()) { // OK
