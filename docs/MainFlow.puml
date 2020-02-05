@@ -1,0 +1,21 @@
+@startuml
+
+(*)  --> "check input"
+If "/start" then
+--> [Yes] "Register user"
+--> "Send link to user blog"
+--> (*)
+else
+--> [No] "Handle message type"
+    If "TEXT"
+   --> [Yes] "Save on the database"
+   --> "Notify User"
+   --> (*)
+   else
+   --> [No] "Save asset on disk"
+   --> "Save on the database"
+   --> "Notify User"
+   Endif
+Endif
+-->(*)
+@enduml

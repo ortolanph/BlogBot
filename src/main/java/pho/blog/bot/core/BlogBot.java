@@ -8,6 +8,8 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import pho.blog.bot.business.service.BlogBotUserService;
+import pho.blog.bot.business.service.TelegramMessageService;
 import pho.blog.bot.core.handler.HandlerResult;
 import pho.blog.bot.core.handler.MessageType;
 import pho.blog.bot.core.handler.TelegramMessageHandler;
@@ -41,6 +43,11 @@ public class BlogBot extends TelegramLongPollingBot {
     private String botKey = "";
     @Autowired
     private DefaultFileSaver saver;
+    @Autowired
+    private BlogBotUserService blogBotUserService;
+    @Autowired
+    private TelegramMessageService telegramMessageService;
+
     private TelegramMessageHandler telegramMessageHandler = TelegramMessageHandlerChain.chain();
 
     @Override
@@ -51,6 +58,7 @@ public class BlogBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         String type = null;
+        String responseMessage = null;
 
         if (update.hasMessage()) {
             Message message = update.getMessage();
@@ -74,23 +82,38 @@ public class BlogBot extends TelegramLongPollingBot {
                     e.printStackTrace();
                 }
 
+                telegramMessageService.saveMessage(message.getFrom().getId(), message.getText(), result.getMessageType(), result.getFile().toString());
                 type = result.getMessageType().getDescription();
+                responseMessage = String.format("%s message received!", type);
             }
 
             if(message.hasText()) {
-                System.out.println(message.getText());
-                type = MessageType.TEXT.getDescription();
+                if(type != null) {
+                    type = MessageType.TEXT.getDescription();
+                }
+
+                if(message.equals("/start")) {
+                    blogBotUserService.register(message.getFrom());
+                    responseMessage = String.format("Welcome to %s, please refer to https://host/blogs/%d for your blog posts", getBotUsername(), message.getFrom().getId());
+                } else {
+                    responseMessage = String.format("%s message received!", type);
+                }
             }
 
-            SendMessage response = new SendMessage();
-            response.setChatId(message.getChatId());
-            response.setText(String.format("%s message received!", type));
-            try {
-                execute(response);
-            } catch (TelegramApiException exception) {
-                exception.printStackTrace();
+            if(responseMessage != null) {
+                sendResponseMessage(message.getChatId(), responseMessage);
             }
+        }
+    }
 
+    private void sendResponseMessage(Long chatId, String message) {
+        SendMessage response = new SendMessage();
+        response.setChatId(chatId);
+        response.setText(message);
+        try {
+            execute(response);
+        } catch (TelegramApiException exception) {
+            exception.printStackTrace();
         }
     }
 
