@@ -96,6 +96,7 @@ public class BlogBot extends TelegramLongPollingBot {
                     blogBotUserService.register(message.getFrom());
                     responseMessage = String.format("Welcome to %s, please refer to https://host/blogs/%d for your blog posts", getBotUsername(), message.getFrom().getId());
                 } else {
+                    telegramMessageService.saveTextMessage(message.getFrom().getId(), message.getText());
                     responseMessage = String.format("%s message received!", type);
                 }
             }

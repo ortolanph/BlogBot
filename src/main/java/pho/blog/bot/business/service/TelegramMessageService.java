@@ -25,4 +25,15 @@ public class TelegramMessageService {
 
         telegramMessageRepository.save(telegramMessage);
     }
+
+    public void saveTextMessage(Integer telegramId, String text) {
+        TelegramMessage telegramMessage = new TelegramMessage();
+
+        telegramMessage.setTelegramId(telegramId);
+        telegramMessage.setMessageType(MessageType.TEXT);
+        telegramMessage.setMessageText(text);
+        telegramMessage.setRegisterAt(LocalDateTime.now());
+
+        telegramMessageRepository.save(telegramMessage);
+    }
 }
