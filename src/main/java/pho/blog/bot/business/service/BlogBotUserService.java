@@ -16,16 +16,24 @@ public class BlogBotUserService {
     @Autowired
     private BlogBotUserRepository blogBotUserRepository;
 
-    public void register(User user) {
+    public boolean register(User user) {
         BlogBotUser blogBotUser = new BlogBotUser();
 
-        blogBotUser.setTelegramId(user.getId());
-        blogBotUser.setFirstName(user.getFirstName());
-        blogBotUser.setLastName(user.getLastName());
-        blogBotUser.setUserName(user.getUserName());
-        blogBotUser.setRegisterAt(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
+        BlogBotUser botUser = blogBotUserRepository.findByTelegramId(user.getId());
 
-        blogBotUserRepository.save(blogBotUser);
+        if(botUser != null) {
+            blogBotUser.setTelegramId(user.getId());
+            blogBotUser.setFirstName(user.getFirstName());
+            blogBotUser.setLastName(user.getLastName());
+            blogBotUser.setUserName(user.getUserName());
+            blogBotUser.setRegisterAt(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
+
+            blogBotUserRepository.save(blogBotUser);
+
+            return true;
+        }
+
+        return false;
     }
 
 }

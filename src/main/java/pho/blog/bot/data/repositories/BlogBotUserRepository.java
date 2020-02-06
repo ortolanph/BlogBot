@@ -6,4 +6,7 @@ import pho.blog.bot.data.entities.BlogBotUser;
 
 @Repository
 public interface BlogBotUserRepository extends JpaRepository<BlogBotUser, Long> {
+
+    BlogBotUser findByTelegramId(Integer telegramId);
+
 }

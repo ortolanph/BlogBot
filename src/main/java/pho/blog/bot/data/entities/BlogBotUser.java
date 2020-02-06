@@ -12,7 +12,7 @@ public class BlogBotUser {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_blog_bot_user")
     private Long id;
-    @Column(name = "telegram_id")
+    @Column(name = "telegram_id", unique = true)
     private Integer telegramId;
     @Column(name = "first_name")
     private String firstName;

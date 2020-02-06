@@ -41,6 +41,9 @@ public class BlogBot extends TelegramLongPollingBot {
     private String botName;
     @Value("${BOT_KEY}")
     private String botKey = "";
+    @Value("§{frontend.url}")
+    private String frontendUrl;
+
     @Autowired
     private DefaultFileSaver saver;
     @Autowired
@@ -91,9 +94,12 @@ public class BlogBot extends TelegramLongPollingBot {
                     type = MessageType.TEXT.getDescription();
                 }
 
-                if(textMessage.equals("/start")) {
-                    blogBotUserService.register(message.getFrom());
-                    responseMessage = String.format("Welcome to %s, please refer to https://host/blogs/%d for your blog posts", getBotUsername(), message.getFrom().getId());
+                if(textMessage.startsWith("/")) {
+                    if(blogBotUserService.register(message.getFrom())) {
+                        responseMessage = String.format("Welcome to %s, please refer to %s/%d for your blog posts", getBotUsername(), frontendUrl, message.getFrom().getId());
+                    } else {
+                        responseMessage = String.format("User already exists");
+                    }
                 } else {
                     telegramMessageService.saveTextMessage(message.getFrom().getId(), textMessage);
                     responseMessage = String.format("%s message received!", type);
