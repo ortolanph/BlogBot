@@ -37,7 +37,7 @@ public class BlogBot extends TelegramLongPollingBot {
     );
     @Value("${bot.files}")
     private String botFiles;
-    @Value("§{bot.name}")
+    @Value("${bot.name}")
     private String botName;
     @Value("${BOT_KEY}")
     private String botKey = "";
