@@ -7,6 +7,8 @@ import pho.blog.bot.data.entities.BlogBotUser;
 import pho.blog.bot.data.repositories.BlogBotUserRepository;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 
 @Service
 public class BlogBotUserService {
@@ -21,7 +23,7 @@ public class BlogBotUserService {
         blogBotUser.setFirstName(user.getFirstName());
         blogBotUser.setLastName(user.getLastName());
         blogBotUser.setUserName(user.getUserName());
-        blogBotUser.setRegisterAt(LocalDateTime.now());
+        blogBotUser.setRegisterAt(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
 
         blogBotUserRepository.save(blogBotUser);
     }

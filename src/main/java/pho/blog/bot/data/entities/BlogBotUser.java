@@ -2,6 +2,7 @@ package pho.blog.bot.data.entities;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Table(name = "blog_bot_user")
@@ -21,7 +22,7 @@ public class BlogBotUser {
     private String userName;
     @Column(name = "registered_at")
     @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime registerAt;
+    private Date registerAt;
 
     public Long getId() {
         return id;
@@ -63,11 +64,11 @@ public class BlogBotUser {
         this.userName = userName;
     }
 
-    public LocalDateTime getRegisterAt() {
+    public Date getRegisterAt() {
         return registerAt;
     }
 
-    public void setRegisterAt(LocalDateTime releaseDate) {
+    public void setRegisterAt(Date releaseDate) {
         this.registerAt = releaseDate;
     }
 }

@@ -7,6 +7,8 @@ import pho.blog.bot.data.entities.TelegramMessage;
 import pho.blog.bot.data.repositories.TelegramMessageRepository;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 
 @Service
 public class TelegramMessageService {
@@ -21,7 +23,7 @@ public class TelegramMessageService {
         telegramMessage.setMessageType(messageType);
         telegramMessage.setMessageText(text);
         telegramMessage.setResourcePath(resourcePath);
-        telegramMessage.setRegisterAt(LocalDateTime.now());
+        telegramMessage.setRegisterAt(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
 
         telegramMessageRepository.save(telegramMessage);
     }
@@ -32,7 +34,7 @@ public class TelegramMessageService {
         telegramMessage.setTelegramId(telegramId);
         telegramMessage.setMessageType(MessageType.TEXT);
         telegramMessage.setMessageText(text);
-        telegramMessage.setRegisterAt(LocalDateTime.now());
+        telegramMessage.setRegisterAt(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
 
         telegramMessageRepository.save(telegramMessage);
     }

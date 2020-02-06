@@ -4,6 +4,7 @@ import pho.blog.bot.core.handler.MessageType;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Table(name = "telegram_message")
@@ -23,7 +24,7 @@ public class TelegramMessage {
     private String resourcePath;
     @Column(name = "registered_at")
     @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime registerAt;
+    private Date registerAt;
 
     public Long getId() {
         return id;
@@ -65,11 +66,11 @@ public class TelegramMessage {
         this.resourcePath = resourcePath;
     }
 
-    public LocalDateTime getRegisterAt() {
+    public Date getRegisterAt() {
         return registerAt;
     }
 
-    public void setRegisterAt(LocalDateTime registerAt) {
+    public void setRegisterAt(Date registerAt) {
         this.registerAt = registerAt;
     }
 }

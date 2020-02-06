@@ -63,8 +63,6 @@ public class BlogBot extends TelegramLongPollingBot {
         if (update.hasMessage()) {
             Message message = update.getMessage();
 
-            LOGGER.warning("Message Received");
-
             HandlerResult result = telegramMessageHandler.process(message, botFiles);
 
             if (result != null) {
@@ -82,21 +80,22 @@ public class BlogBot extends TelegramLongPollingBot {
                     e.printStackTrace();
                 }
 
-                telegramMessageService.saveMessage(message.getFrom().getId(), message.getText(), result.getMessageType(), result.getFile().toString());
+                telegramMessageService.saveMessage(message.getFrom().getId(), message.getCaption(), result.getMessageType(), result.getFile().toString());
                 type = result.getMessageType().getDescription();
                 responseMessage = String.format("%s message received!", type);
             }
 
             if(message.hasText()) {
-                if(type != null) {
+                String textMessage = message.getText();
+                if(type == null) {
                     type = MessageType.TEXT.getDescription();
                 }
 
-                if(message.equals("/start")) {
+                if(textMessage.equals("/start")) {
                     blogBotUserService.register(message.getFrom());
                     responseMessage = String.format("Welcome to %s, please refer to https://host/blogs/%d for your blog posts", getBotUsername(), message.getFrom().getId());
                 } else {
-                    telegramMessageService.saveTextMessage(message.getFrom().getId(), message.getText());
+                    telegramMessageService.saveTextMessage(message.getFrom().getId(), textMessage);
                     responseMessage = String.format("%s message received!", type);
                 }
             }
