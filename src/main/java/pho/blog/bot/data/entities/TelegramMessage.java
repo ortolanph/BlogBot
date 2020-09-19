@@ -3,7 +3,6 @@ package pho.blog.bot.data.entities;
 import pho.blog.bot.core.handler.MessageType;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity

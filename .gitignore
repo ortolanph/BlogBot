@@ -28,3 +28,7 @@ target/*
 # IntelliJ
 .idea/**
 *.iml
+
+# Others
+/lsp
+

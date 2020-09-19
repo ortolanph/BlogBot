@@ -116,6 +116,7 @@ public class BlogBot extends TelegramLongPollingBot {
         SendMessage response = new SendMessage();
         response.setChatId(chatId);
         response.setText(message);
+
         try {
             execute(response);
         } catch (TelegramApiException exception) {
